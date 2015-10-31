@@ -85,5 +85,25 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
     }
   }
 
-  override def swapArray(from: Int, to: Int): Unit = ???
+  override def swapArray(from: Int, to: Int): Unit = {
+    for {
+      fromNode <- parser.ast.find(_.id == from)
+      toNode <- parser.ast.find(_.id == to)
+      parentNode <- parser.ast.find(_.id == toNode.parentId)
+    } {
+      if (fromNode.parentId == toNode.parentId && parentNode.id == fromNode.parentId) {
+        parentNode match {
+          case _: ArrayNode =>
+            val fromIndex = parentNode.childrenId.indexOf(fromNode.id)
+            val toIndex = parentNode.childrenId.indexOf(toNode.id)
+            val newChildrenId = parentNode.childrenId.updated(fromIndex, toNode.id).updated(toIndex, fromNode.id)
+            val newChildrenNodes = newChildrenId.flatMap(id => parser.ast.find(_.id == id))
+            val newCode = "[" + newChildrenNodes.map(_.code).mkString(", ") + "]"
+            val newNode = ArrayNode(parentNode.id, newCode, parentNode.parentId, newChildrenId)
+            updateCode(newNode)
+          case _ =>
+        }
+      }
+    }
+  }
 }

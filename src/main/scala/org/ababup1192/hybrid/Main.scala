@@ -11,18 +11,26 @@ object Main {
     parser.input(json)
 
     println(parser.code)
+    /*
     parser.controller.setKey(2, "foo2")
     parser.controller.setKey(4, "bar2")
     parser.controller.setKey(11, "buzz")
     parser.controller.setValue(16, value = false)
     parser.controller.setValue(9, 12)
+    */
+    /*
     parser.controller.delete(10)
     parser.controller.delete(6)
     parser.controller.delete(19)
     parser.controller.delete(17)
     parser.controller.delete(14)
+    */
 
-    println(parser.ast.mkString("\n"))
+    parser.controller.swapArray(6, 9)
+    parser.controller.swapArray(13, 10)
+
+    // println(parser.ast.mkString("\n"))
+
     println(parser.code)
   }
 
