@@ -19,7 +19,7 @@ case class NumberNode(id: Int, code: String, value: Double, parentId: Int, child
 
 case class BooleanNode(id: Int, code: String, value: Boolean, parentId: Int, childrenId: List[Int]) extends Node
 
-case class NullNode(id: Int, code: String, parentId: Int, childrenId: List[Int]) extends Node
+case class NullNode(id: Int, code: String = "null", parentId: Int, childrenId: List[Int] = List.empty) extends Node
 
 
 

@@ -29,17 +29,17 @@
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/Main.scala">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JsonParser.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="JsonParser.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/JsonParser.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.72938144">
+              <caret line="60" column="18" selection-start-line="60" selection-start-column="18" selection-end-line="60" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -55,10 +55,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ParserController.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ParserController.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/ParserController.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.61340207">
+            <state vertical-scroll-proportion="0.0">
               <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
               <folding>
                 <element signature="e#31#95#0" expanded="true" />
@@ -81,7 +81,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/Node.scala">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="11" column="107" selection-start-line="11" selection-start-column="107" selection-end-line="11" selection-end-column="107" />
+              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -114,11 +114,11 @@
         <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/JsonParser.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/Node.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/Parser.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/Node.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/util/StringUtil.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/ParserController.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/Node.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/JsonParser.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/Main.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/ParserController.scala" />
       </list>
     </option>
   </component>
@@ -645,12 +645,12 @@
       <created>1446239397959</created>
       <option name="number" value="Default" />
       <updated>1446239397959</updated>
-      <workItem from="1446239401889" duration="16502000" />
+      <workItem from="1446239401889" duration="18022000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16502000" />
+    <option name="totallyTimeSpent" value="18022000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -709,7 +709,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/Node.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="107" selection-start-line="11" selection-start-column="107" selection-end-line="11" selection-end-column="107" />
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -717,16 +717,18 @@
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/Main.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/JsonParser.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/ParserController.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding />
+          <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
+          <folding>
+            <element signature="e#31#95#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -738,13 +740,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/ParserController.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/ababup1192/hybrid/JsonParser.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61340207">
-          <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
-          <folding>
-            <element signature="e#31#95#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.72938144">
+          <caret line="60" column="18" selection-start-line="60" selection-start-column="18" selection-end-line="60" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
