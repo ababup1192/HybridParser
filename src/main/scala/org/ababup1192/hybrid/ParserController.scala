@@ -31,6 +31,17 @@ trait ParserController {
     }
   }
 
+  def deleteCode(deleteNode: Node): Unit = {
+    parser.syntax.getNode(deleteNode.id).foreach { node =>
+      getNodeFragment(node.getId).foreach { fragment =>
+        StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch) match {
+          case (prefix, inner, suffix) =>
+            parser.input(prefix + suffix)
+        }
+      }
+    }
+  }
+
   def getNodeFragment(id: Int): Option[Fragment] = {
     parser.syntax.getNode(id) match {
       case Some(node) =>
