@@ -1,6 +1,7 @@
 package org.ababup1192.hybrid
 
 trait Node {
+  val id: Int
   val code: String
   val parentId: Int
   val childrenId: List[Int]
@@ -8,9 +9,7 @@ trait Node {
 
 case class ObjectNode(id: Int, code: String, parentId: Int, childrenId: List[Int]) extends Node
 
-case class EntryNode(id: Int, code: String, key: String, parentId: Int, childrenId: List[Int]) extends Node {
-  def setKey(newKey: String): EntryNode = copy(key = "\"" + newKey + "\"")
-}
+case class EntryNode(id: Int, code: String, key: String, parentId: Int, childrenId: List[Int]) extends Node
 
 case class ArrayNode(id: Int, code: String, parentId: Int, childrenId: List[Int]) extends Node
 

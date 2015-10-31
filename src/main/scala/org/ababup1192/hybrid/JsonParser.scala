@@ -12,13 +12,20 @@ case class JsonParser() extends Parser {
   syntax.onNodeCreate.bind { node =>
     addedNodes = node.getId :: addedNodes
   }
-
-
 }
 
-
 case class JsonParserController(parser: JsonParser) extends ParserController {
-  override def setKey(id: Int, newKey: String): Unit = ???
+
+  override def setKey(id: Int, key: String): Unit = {
+    parser.ast.find(_.id == id).foreach {
+      case node: EntryNode =>
+        val newKey = "\"" + key + "\""
+        val newCode = node.code.replace(node.key, newKey)
+        val newEntry = node.copy(key = newKey, code = newCode)
+        updateCode(newEntry)
+      case _ =>
+    }
+  }
 
   override def setValue(id: Int, value: String): Unit = ???
 
