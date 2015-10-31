@@ -16,7 +16,7 @@ case class ArrayNode(id: Int, code: String, parentId: Int, childrenId: List[Int]
 
 case class StringNode(id: Int, code: String, value: String, parentId: Int, childrenId: List[Int]) extends Node
 
-case class NumberNode(id: Int, code: String, value: Int, parentId: Int, childrenId: List[Int]) extends Node
+case class NumberNode(id: Int, code: String, value: Double, parentId: Int, childrenId: List[Int]) extends Node
 
 case class BooleanNode(id: Int, code: String, value: Boolean, parentId: Int, childrenId: List[Int]) extends Node
 

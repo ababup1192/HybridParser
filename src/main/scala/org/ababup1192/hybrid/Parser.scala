@@ -5,6 +5,7 @@ import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 trait Parser {
   val lexer: Lexer
   val syntax: Syntax
+  val controller: ParserController
   var addedNodes: List[Int]
 
   def code: String = {
@@ -40,7 +41,7 @@ trait Parser {
         EntryNode(id, code, key, parentId, childrenId)
       case "array" => ArrayNode(id, code, parentId, childrenId)
       case "string" => StringNode(id, code, value = code, parentId, childrenId)
-      case "number" => NumberNode(id, code, code.toInt, parentId, childrenId)
+      case "number" => NumberNode(id, code, code.toDouble, parentId, childrenId)
       case "boolean" => BooleanNode(id, code, code.toBoolean, parentId, childrenId)
       case _ => NullNode(id, code, parentId, childrenId)
     }
