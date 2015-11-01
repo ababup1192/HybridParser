@@ -18,6 +18,7 @@ object Main {
     parser.controller.setValue(16, value = false)
     parser.controller.setValue(9, 12)
     */
+
     /*
     parser.controller.delete(10)
     parser.controller.delete(6)
@@ -26,10 +27,19 @@ object Main {
     parser.controller.delete(14)
     */
 
+    /*
     parser.controller.swapArray(6, 9)
     parser.controller.swapArray(13, 10)
+    */
 
-    // println(parser.ast.mkString("\n"))
+    parser.controller.addEntry(1, "buzz")
+
+    parser.controller.insertNode(NumberNode(14, "14", 14, -1, List.empty))
+
+
+    parser.controller.addArrayElement(ArrayNode(14, "[]", 5, List.empty))
+
+    println(parser.ast.mkString("\n"))
 
     println(parser.code)
   }

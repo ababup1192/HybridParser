@@ -16,17 +16,19 @@ trait ParserController {
 
   def swapArray(from: Int, to: Int): Unit
 
-  def insert(target: Int, value: Any): Unit
+  def insertNode(newNode: Node): Unit
+
+  def addEntry(target: Int, key: String): Unit
+
+  def addArrayElement(newNode: Node): Unit
 
   def delete(id: Int): Unit
 
   def updateCode(newNode: Node): Unit = {
     parser.syntax.getNode(newNode.id).foreach { node =>
       getNodeFragment(node.getId).foreach { fragment =>
-        StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch) match {
-          case (prefix, inner, suffix) =>
-            parser.input(prefix + newNode.code + suffix)
-        }
+        val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch)
+        parser.input(prefix + newNode.code + suffix)
       }
     }
   }
@@ -34,10 +36,8 @@ trait ParserController {
   def deleteCode(deleteNode: Node): Unit = {
     parser.syntax.getNode(deleteNode.id).foreach { node =>
       getNodeFragment(node.getId).foreach { fragment =>
-        StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch) match {
-          case (prefix, inner, suffix) =>
-            parser.input(prefix + suffix)
-        }
+        val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch)
+        parser.input(prefix + suffix)
       }
     }
   }

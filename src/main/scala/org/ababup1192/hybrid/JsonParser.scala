@@ -59,7 +59,55 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
     }
   }
 
-  override def insert(target: Int, value: Any): Unit = ???
+  override def insertNode(newNode: Node): Unit = {
+    parser.ast.find(_.id == newNode.id).foreach {
+      case _: NullNode =>
+        updateCode(newNode)
+    }
+  }
+
+  override def addEntry(target: Int, key: String): Unit = {
+    parser.ast.find(_.id == target).foreach {
+      case targetNode: ObjectNode =>
+        val addedNode = EntryNode(-1, "\"" + key + "\": null", key, target, List.empty)
+        val siblingNodes = parser.ast.filter(node => node.parentId == targetNode.id) :+ addedNode
+        val newCode = "{" + siblingNodes.map(_.code).mkString(", ") + "}"
+        val newObjectNode = ObjectNode(targetNode.id, newCode, targetNode.parentId, siblingNodes.map(_.id).toList)
+        updateCode(newObjectNode)
+    }
+  }
+
+  override def addArrayElement(newNode: Node): Unit = {
+    parser.ast.find(_.id == newNode.parentId).foreach {
+      case targetNode: ArrayNode =>
+        val siblingNodes = parser.ast.filter(node => node.parentId == targetNode.id) :+ newNode
+        val newCode = "[" + siblingNodes.map(_.code).mkString(", ") + "]"
+        val newArrayNode = ArrayNode(targetNode.id, newCode, targetNode.parentId, siblingNodes.map(_.id).toList)
+        updateCode(newArrayNode)
+    }
+  }
+
+  override def swapArray(from: Int, to: Int): Unit = {
+    for {
+      fromNode <- parser.ast.find(_.id == from)
+      toNode <- parser.ast.find(_.id == to)
+      parentNode <- parser.ast.find(_.id == toNode.parentId)
+    } {
+      if (fromNode.parentId == toNode.parentId && parentNode.id == fromNode.parentId) {
+        parentNode match {
+          case _: ArrayNode =>
+            val fromIndex = parentNode.childrenId.indexOf(fromNode.id)
+            val toIndex = parentNode.childrenId.indexOf(toNode.id)
+            val newChildrenId = parentNode.childrenId.updated(fromIndex, toNode.id).updated(toIndex, fromNode.id)
+            val newChildrenNodes = newChildrenId.flatMap(id => parser.ast.find(_.id == id))
+            val newCode = "[" + newChildrenNodes.map(_.code).mkString(", ") + "]"
+            val newNode = ArrayNode(parentNode.id, newCode, parentNode.parentId, newChildrenId)
+            updateCode(newNode)
+          case _ =>
+        }
+      }
+    }
+  }
 
   override def delete(id: Int): Unit = {
     parser.ast.find(_.id == id).foreach { node =>
@@ -85,25 +133,4 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
     }
   }
 
-  override def swapArray(from: Int, to: Int): Unit = {
-    for {
-      fromNode <- parser.ast.find(_.id == from)
-      toNode <- parser.ast.find(_.id == to)
-      parentNode <- parser.ast.find(_.id == toNode.parentId)
-    } {
-      if (fromNode.parentId == toNode.parentId && parentNode.id == fromNode.parentId) {
-        parentNode match {
-          case _: ArrayNode =>
-            val fromIndex = parentNode.childrenId.indexOf(fromNode.id)
-            val toIndex = parentNode.childrenId.indexOf(toNode.id)
-            val newChildrenId = parentNode.childrenId.updated(fromIndex, toNode.id).updated(toIndex, fromNode.id)
-            val newChildrenNodes = newChildrenId.flatMap(id => parser.ast.find(_.id == id))
-            val newCode = "[" + newChildrenNodes.map(_.code).mkString(", ") + "]"
-            val newNode = ArrayNode(parentNode.id, newCode, parentNode.parentId, newChildrenId)
-            updateCode(newNode)
-          case _ =>
-        }
-      }
-    }
-  }
 }
