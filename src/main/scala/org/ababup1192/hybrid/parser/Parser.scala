@@ -1,7 +1,12 @@
 package org.ababup1192.hybrid.parser
 
+import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 
+/**
+ * Parser has lexer, syntax, AST and ParserController.
+ * ParserController can edit Source Code by using AST.
+ */
 trait Parser {
   val lexer: Lexer
   val syntax: Syntax
@@ -14,10 +19,18 @@ trait Parser {
     }.getOrElse("")
   }
 
+  /**
+   * Update Source Code and AST
+   * @param newCode new Source Code.
+   */
   def input(newCode: String): Unit = {
     lexer.input(newCode)
   }
 
+  /**
+   * Create an another AST for convenience.
+   * @return AST ID -> Node
+   */
   def ast: Map[Int, Node] = {
     addedNodes.reverse.foldLeft(Map.empty[Int, Node]) { (ast, id) =>
       syntax.getNode(id) match {
@@ -27,6 +40,11 @@ trait Parser {
     }
   }
 
+  /**
+   * Transform Parser Combinator AST Node -> Another AST Node
+   * @param node Syntax AST Node
+   * @return Another AST Node
+   */
   private def exportNode(node: name.lakhin.eliah.projects.papacarlo.syntax.Node): Node = {
     val id = node.getId
     val code = node.sourceCode
@@ -46,4 +64,27 @@ trait Parser {
     }
   }
 
+  /**
+   * Get token index of begin to end.
+   * @param id Node ID
+   * @return Fragment
+   */
+  def getNodeFragment(id: Int): Option[Fragment] = {
+    syntax.getNode(id) match {
+      case Some(node) =>
+        Some(Fragment(id, tokenCursor(node.getBegin), tokenCursor(node.getEnd, after = true)))
+      case None => None
+    }
+  }
+
+  def tokenCursor(token: TokenReference, after: Boolean = false): WordLocation = {
+    val (line, ch) = token.collection.cursor(token.index + (if (after) 1 else 0))
+    WordLocation(line, ch - 1)
+  }
+
 }
+
+case class Fragment(id: Int, from: WordLocation, to: WordLocation)
+
+case class WordLocation(line: Int, ch: Int)
+

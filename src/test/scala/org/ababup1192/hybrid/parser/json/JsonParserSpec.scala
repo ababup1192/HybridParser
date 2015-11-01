@@ -250,6 +250,4 @@ class JsonParserSpec extends FlatSpec with Matchers {
       case _ => throw new Exception("Type mismatch")
     }
   }
-
-
 }

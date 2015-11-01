@@ -1,6 +1,5 @@
 package org.ababup1192.hybrid.parser
 
-import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import org.ababup1192.hybrid.util.StringUtil
 
 trait ParserController {
@@ -24,39 +23,33 @@ trait ParserController {
 
   def delete(id: Int): Unit
 
+  /**
+   * Update Source Code by using Node
+   * @param newNode update target Node
+   */
   def updateCode(newNode: Node): Unit = {
-    parser.syntax.getNode(newNode.id).foreach { node =>
-      getNodeFragment(node.getId).foreach { fragment =>
-        val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch)
-        parser.input(prefix + newNode.code + suffix)
-      }
+    for {
+      node <- parser.syntax.getNode(newNode.id)
+      fragment <- parser.getNodeFragment(node.getId)
+    } {
+      val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch)
+      parser.input(prefix + newNode.code + suffix)
     }
   }
 
+  /**
+   * Delete Source Code by using Node
+   * @param deleteNode Target Node of Deleting
+   */
   def deleteCode(deleteNode: Node): Unit = {
-    parser.syntax.getNode(deleteNode.id).foreach { node =>
-      getNodeFragment(node.getId).foreach { fragment =>
-        val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch)
-        parser.input(prefix + suffix)
-      }
+    for {
+      node <- parser.syntax.getNode(deleteNode.id)
+      fragment <- parser.getNodeFragment(node.getId)
+    } {
+      val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch)
+      parser.input(prefix + suffix)
     }
-  }
-
-  def getNodeFragment(id: Int): Option[Fragment] = {
-    parser.syntax.getNode(id) match {
-      case Some(node) =>
-        Some(Fragment(id, tokenCursor(node.getBegin), tokenCursor(node.getEnd, after = true)))
-      case None => None
-    }
-  }
-
-  private def tokenCursor(token: TokenReference, after: Boolean = false): WordLocation = {
-    val (line, ch) = token.collection.cursor(token.index + (if (after) 1 else 0))
-    WordLocation(line, ch - 1)
   }
 }
 
-case class Fragment(id: Int, from: WordLocation, to: WordLocation)
-
-case class WordLocation(line: Int, ch: Int)
 
