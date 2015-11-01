@@ -18,14 +18,13 @@ trait Parser {
     lexer.input(newCode)
   }
 
-  def ast: Vector[org.ababup1192.hybrid.Node] = {
-    val ast = addedNodes.reverse.foldLeft(Vector.empty[org.ababup1192.hybrid.Node]) { (vector, id) =>
+  def ast: Map[Int, org.ababup1192.hybrid.Node] = {
+    addedNodes.reverse.foldLeft(Map.empty[Int, org.ababup1192.hybrid.Node]) { (ast, id) =>
       syntax.getNode(id) match {
-        case Some(node) => vector :+ exportNode(node)
-        case None => vector
+        case Some(node) => ast ++ Map(id -> exportNode(node))
+        case None => ast
       }
     }
-    ast
   }
 
   private def exportNode(node: name.lakhin.eliah.projects.papacarlo.syntax.Node): org.ababup1192.hybrid.Node = {

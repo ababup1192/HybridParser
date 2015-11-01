@@ -17,7 +17,7 @@ case class JsonParser() extends Parser {
 case class JsonParserController(parser: JsonParser) extends ParserController {
 
   override def setKey(id: Int, key: String): Unit = {
-    parser.ast.find(_.id == id).foreach {
+    parser.ast.get(id).foreach {
       case node: EntryNode =>
         val newKey = "\"" + key + "\""
         val newCode = node.code.replace(node.key, newKey)
@@ -28,7 +28,7 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   override def setValue(id: Int, value: String): Unit = {
-    parser.ast.find(_.id == id).foreach {
+    parser.ast.get(id).foreach {
       case node: StringNode =>
         val newValue = "\"" + value + "\""
         val newCode = node.code.replace(node.value, newValue)
@@ -39,7 +39,7 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   override def setValue(id: Int, value: Double): Unit = {
-    parser.ast.find(_.id == id).foreach {
+    parser.ast.get(id).foreach {
       case node: NumberNode =>
         updateCode(if (value.isValidInt) {
           node.copy(value = value, code = value.toInt.toString)
@@ -51,7 +51,7 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   override def setValue(id: Int, value: Boolean): Unit = {
-    parser.ast.find(_.id == id).foreach {
+    parser.ast.get(id).foreach {
       case node: BooleanNode =>
         val newNode = node.copy(value = value, code = value.toString)
         updateCode(newNode)
@@ -60,38 +60,41 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   override def insertNode(newNode: Node): Unit = {
-    parser.ast.find(_.id == newNode.id).foreach {
+    parser.ast.get(newNode.id).foreach {
       case _: NullNode =>
         updateCode(newNode)
     }
   }
 
   override def addEntry(target: Int, key: String): Unit = {
-    parser.ast.find(_.id == target).foreach {
+    val ast = parser.ast
+    ast.get(target).foreach {
       case targetNode: ObjectNode =>
-        val addedNode = EntryNode(-1, "\"" + key + "\": null", key, target, List.empty)
-        val siblingNodes = parser.ast.filter(node => node.parentId == targetNode.id) :+ addedNode
-        val newCode = "{" + siblingNodes.map(_.code).mkString(", ") + "}"
-        val newObjectNode = ObjectNode(targetNode.id, newCode, targetNode.parentId, siblingNodes.map(_.id).toList)
+        val newNode = EntryNode(-1, "\"" + key + "\": null", key, target, List.empty)
+        val siblingsNodes = newNode.siblings(ast) :+ newNode
+        val newCode = "{" + siblingsNodes.map(_.code).mkString(", ") + "}"
+        val newObjectNode = ObjectNode(targetNode.id, newCode, targetNode.parentId, siblingsNodes.map(_.id).toList)
         updateCode(newObjectNode)
     }
   }
 
   override def addArrayElement(newNode: Node): Unit = {
-    parser.ast.find(_.id == newNode.parentId).foreach {
+    val ast = parser.ast
+    parser.ast.get(newNode.parentId).foreach {
       case targetNode: ArrayNode =>
-        val siblingNodes = parser.ast.filter(node => node.parentId == targetNode.id) :+ newNode
-        val newCode = "[" + siblingNodes.map(_.code).mkString(", ") + "]"
-        val newArrayNode = ArrayNode(targetNode.id, newCode, targetNode.parentId, siblingNodes.map(_.id).toList)
+        val siblingsNodes = newNode.siblings(ast) :+ newNode
+        val newCode = "[" + siblingsNodes.map(_.code).mkString(", ") + "]"
+        val newArrayNode = ArrayNode(targetNode.id, newCode, targetNode.parentId, siblingsNodes.map(_.id).toList)
         updateCode(newArrayNode)
     }
   }
 
   override def swapArray(from: Int, to: Int): Unit = {
+    val ast = parser.ast
     for {
-      fromNode <- parser.ast.find(_.id == from)
-      toNode <- parser.ast.find(_.id == to)
-      parentNode <- parser.ast.find(_.id == toNode.parentId)
+      fromNode <- ast.get(from)
+      toNode <- ast.get(to)
+      parentNode <- ast.get(toNode.parentId)
     } {
       if (fromNode.parentId == toNode.parentId && parentNode.id == fromNode.parentId) {
         parentNode match {
@@ -99,7 +102,7 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
             val fromIndex = parentNode.childrenId.indexOf(fromNode.id)
             val toIndex = parentNode.childrenId.indexOf(toNode.id)
             val newChildrenId = parentNode.childrenId.updated(fromIndex, toNode.id).updated(toIndex, fromNode.id)
-            val newChildrenNodes = newChildrenId.flatMap(id => parser.ast.find(_.id == id))
+            val newChildrenNodes = newChildrenId.flatMap(id => ast.get(id))
             val newCode = "[" + newChildrenNodes.map(_.code).mkString(", ") + "]"
             val newNode = ArrayNode(parentNode.id, newCode, parentNode.parentId, newChildrenId)
             updateCode(newNode)
@@ -110,21 +113,22 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   override def delete(id: Int): Unit = {
-    parser.ast.find(_.id == id).foreach { node =>
-      val parentNode = parser.ast.find(_.id == node.parentId)
+    val ast = parser.ast
+    ast.get(id).foreach { node =>
+      val parentNode = ast.get(node.parentId)
       (parentNode, node) match {
         case (Some(_: EntryNode), _) =>
           val newNode = NullNode(node.id, "null", node.parentId)
           updateCode(newNode)
         case (Some(pNode: ArrayNode), _) =>
-          val siblingNodes = parser.ast.filter(n => n.parentId == pNode.id && n.id != node.id)
-          val newCode = "[" + siblingNodes.map(_.code).mkString(", ") + "]"
-          val newNode = ArrayNode(pNode.id, newCode, pNode.parentId, siblingNodes.map(_.id).toList)
+          val siblingsNodes = node.siblingsWithSelf(ast)
+          val newCode = "[" + siblingsNodes.map(_.code).mkString(", ") + "]"
+          val newNode = ArrayNode(pNode.id, newCode, pNode.parentId, siblingsNodes.map(_.id).toList)
           updateCode(newNode)
         case (Some(pNode: ObjectNode), _: EntryNode) =>
-          val siblingNodes = parser.ast.filter(n => n.parentId == pNode.id && n.id != node.id)
-          val newCode = "{" + siblingNodes.map(_.code).mkString(", ") + "}"
-          val newNode = ArrayNode(pNode.id, newCode, pNode.parentId, siblingNodes.map(_.id).toList)
+          val siblingsNodes = node.siblingsWithSelf(ast)
+          val newCode = "{" + siblingsNodes.map(_.code).mkString(", ") + "}"
+          val newNode = ArrayNode(pNode.id, newCode, pNode.parentId, siblingsNodes.map(_.id).toList)
           updateCode(newNode)
         case (_, _: ObjectNode) =>
           deleteCode(node)

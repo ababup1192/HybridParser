@@ -5,6 +5,14 @@ trait Node {
   val code: String
   val parentId: Int
   val childrenId: List[Int]
+
+  def siblings(ast: Map[Int, Node]): Vector[Node] = {
+    ast.values.par.filter(node => node.parentId == this.parentId).toVector
+  }
+
+  def siblingsWithSelf(ast: Map[Int, Node]): Vector[Node] = {
+    ast.values.par.filter(node => node.parentId == this.parentId && this.id != node.id).toVector
+  }
 }
 
 case class ObjectNode(id: Int, code: String, parentId: Int, childrenId: List[Int]) extends Node

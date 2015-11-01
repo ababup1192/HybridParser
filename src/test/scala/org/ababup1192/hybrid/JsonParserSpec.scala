@@ -7,7 +7,7 @@ class JsonParserSpec extends FlatSpec with Matchers {
     val parser = JsonParser()
     parser.input("{}")
     val ast = parser.ast
-    ast.length should ===(1)
+    ast.size should ===(1)
     ast.headOption === Some(ObjectNode)
   }
 }
