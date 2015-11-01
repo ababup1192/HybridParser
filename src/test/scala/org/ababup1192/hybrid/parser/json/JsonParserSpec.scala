@@ -30,7 +30,7 @@ class JsonParserSpec extends FlatSpec with Matchers {
 
     ast.get(2) match {
       case Some(EntryNode(id, code, entryKey, parentId, childrenId)) =>
-        entryKey should ===("\"" + "foo" + "\"")
+        entryKey should ===("foo")
         parentId should ===(1)
         childrenId should ===(List(3))
       case _ => throw new Exception("Type mismatch")
@@ -57,7 +57,7 @@ class JsonParserSpec extends FlatSpec with Matchers {
 
     ast.get(2) match {
       case Some(EntryNode(id, code, entryKey, parentId, childrenId)) =>
-        entryKey should ===("\"" + "foo" + "\"")
+        entryKey should ===("foo")
         parentId should ===(1)
         childrenId should ===(List(3))
       case _ => throw new Exception("Type mismatch")
@@ -71,7 +71,7 @@ class JsonParserSpec extends FlatSpec with Matchers {
 
     ast.get(4) match {
       case Some(EntryNode(id, code, entryKey, parentId, childrenId)) =>
-        entryKey should ===("\"" + "bar" + "\"")
+        entryKey should ===("bar")
         parentId should ===(1)
         childrenId should ===(List(5))
       case _ => throw new Exception("Type mismatch")
@@ -222,7 +222,7 @@ class JsonParserSpec extends FlatSpec with Matchers {
 
     ast.get(2) match {
       case Some(EntryNode(id, code, entryKey, parentId, childrenId)) =>
-        entryKey should ===("\"" + "humans" + "\"")
+        entryKey should ===("humans")
         parentId should ===(1)
         childrenId should ===(List(3))
       case _ => throw new Exception("Type mismatch")

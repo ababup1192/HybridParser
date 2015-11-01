@@ -7,9 +7,8 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   override def setKey(id: Int, key: String): Unit = {
     parser.ast.get(id).foreach {
       case node: EntryNode =>
-        val newKey = "\"" + key + "\""
-        val newCode = node.code.replace(node.key, newKey)
-        val newNode = node.copy(key = newKey, code = newCode)
+        val newCode = node.code.replace(node.key, key)
+        val newNode = node.copy(key = key, code = newCode)
         updateCode(newNode)
       case _ =>
     }
@@ -68,7 +67,7 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
     val ast = parser.ast
     ast.get(objectId).foreach {
       case objectNode: ObjectNode =>
-        val newNode = EntryNode(-1, "\"" + key + "\": null", key, objectNode.id, List.empty)
+        val newNode = EntryNode.newValue(key = key, parentId = objectNode.id)
         val siblingsNodes = newNode.siblings(ast) :+ newNode
         // Rewrite an object code.
         val newCode = "{" + siblingsNodes.map(_.code).mkString(", ") + "}"
@@ -138,7 +137,7 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
           deleteArrayElement(ast, deleteNode, arrayNode)
         // {"foo": foo, "bar": bar, "DeleteEntry": delete} -> {"foo": foo, "bar": bar}
         case (objectNode: ObjectNode, _: EntryNode) =>
-          deleteObjectEntry(ast, deleteNode, objectNode)
+          deleteEntry(ast, deleteNode, objectNode)
         // ObjectNode
         case (_, _: ObjectNode) =>
           deleteCode(deleteNode)
@@ -148,14 +147,14 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   private def deleteArrayElement(ast: Map[Int, Node], deleteNode: Node, arrayNode: ArrayNode): Unit = {
-    val siblingsNodes = deleteNode.siblingsWithSelf(ast)
+    val siblingsNodes = deleteNode.siblings(ast)
     val newCode = "[" + siblingsNodes.map(_.code).mkString(", ") + "]"
     val newNode = ArrayNode(arrayNode.id, newCode, arrayNode.parentId, siblingsNodes.map(_.id).toList)
     updateCode(newNode)
   }
 
-  private def deleteObjectEntry(ast: Map[Int, Node], deleteEntry: Node, objectNode: ObjectNode): Unit = {
-    val siblingsNodes = deleteEntry.siblingsWithSelf(ast)
+  private def deleteEntry(ast: Map[Int, Node], deleteEntry: Node, objectNode: ObjectNode): Unit = {
+    val siblingsNodes = deleteEntry.siblings(ast)
     val newCode = "{" + siblingsNodes.map(_.code).mkString(", ") + "}"
     val newNode = ArrayNode(objectNode.id, newCode, objectNode.parentId, siblingsNodes.map(_.id).toList)
     updateCode(newNode)

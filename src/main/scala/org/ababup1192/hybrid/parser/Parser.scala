@@ -24,8 +24,8 @@ trait Parser {
    * @param newCode new Source Code.
    */
   def input(newCode: String): Unit = {
-    addedNodes = List(1)
     lexer.input(newCode)
+    addedNodes = addedNodes diff (addedNodes diff ast.keys.toList)
   }
 
   /**
@@ -56,7 +56,8 @@ trait Parser {
       case "object" => ObjectNode(id, code, parentId, childrenId)
       case "entry" =>
         val key = node.getValues.flatMap(_._2).headOption.getOrElse("")
-        EntryNode(id, code, key, parentId, childrenId)
+        // Delete left and right double quote
+        EntryNode(id, code, key.drop(1).dropRight(1), parentId, childrenId)
       case "array" => ArrayNode(id, code, parentId, childrenId)
       case "string" => StringNode(id, code, value = code, parentId, childrenId)
       case "number" => NumberNode(id, code, code.toDouble, parentId, childrenId)
