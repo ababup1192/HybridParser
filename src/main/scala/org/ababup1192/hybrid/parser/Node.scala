@@ -17,6 +17,12 @@ trait Node {
 
 case class ObjectNode(id: Int, code: String, parentId: Int, childrenId: List[Int]) extends Node
 
+object ObjectNode {
+  def newValue(id: Int = -1, code: String = "{}", parentId: Int = -1, childrenId: List[Int] = List.empty): ObjectNode = {
+    ObjectNode(id, code, parentId, childrenId)
+  }
+}
+
 case class EntryNode(id: Int, code: String, key: String, parentId: Int, childrenId: List[Int]) extends Node
 
 case class ArrayNode(id: Int, code: String, parentId: Int, childrenId: List[Int]) extends Node
@@ -24,6 +30,16 @@ case class ArrayNode(id: Int, code: String, parentId: Int, childrenId: List[Int]
 case class StringNode(id: Int, code: String, value: String, parentId: Int, childrenId: List[Int]) extends Node
 
 case class NumberNode(id: Int, code: String, value: Double, parentId: Int, childrenId: List[Int]) extends Node
+
+object NumberNode {
+  def newValue(id: Int = -1, value: Int, parentId: Int = -1, childrenId: List[Int] = List.empty): NumberNode = {
+    if (value.isValidInt) {
+      NumberNode(id, value.toInt.toString, value, parentId, childrenId)
+    } else {
+      NumberNode(id, value.toString, value, parentId, childrenId)
+    }
+  }
+}
 
 case class BooleanNode(id: Int, code: String, value: Boolean, parentId: Int, childrenId: List[Int]) extends Node
 

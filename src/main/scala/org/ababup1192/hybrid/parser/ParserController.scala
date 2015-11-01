@@ -32,7 +32,7 @@ trait ParserController {
       node <- parser.syntax.getNode(newNode.id)
       fragment <- parser.getNodeFragment(node.getId)
     } {
-      val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch)
+      val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from, fragment.to)
       parser.input(prefix + newNode.code + suffix)
     }
   }
@@ -46,7 +46,7 @@ trait ParserController {
       node <- parser.syntax.getNode(deleteNode.id)
       fragment <- parser.getNodeFragment(node.getId)
     } {
-      val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from.ch, fragment.to.ch)
+      val (prefix, _, suffix) = StringUtil.splitString(parser.code, fragment.from, fragment.to)
       parser.input(prefix + suffix)
     }
   }

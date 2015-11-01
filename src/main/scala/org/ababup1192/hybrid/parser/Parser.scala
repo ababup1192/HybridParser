@@ -24,6 +24,7 @@ trait Parser {
    * @param newCode new Source Code.
    */
   def input(newCode: String): Unit = {
+    addedNodes = List(1)
     lexer.input(newCode)
   }
 

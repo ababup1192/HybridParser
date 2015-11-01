@@ -29,11 +29,12 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   override def setValue(id: Int, value: Double): Unit = {
     parser.ast.get(id).foreach {
       case node: NumberNode =>
-        updateCode(if (value.isValidInt) {
+        val newNode = if (value.isValidInt) {
           node.copy(value = value, code = value.toInt.toString)
         } else {
           node.copy(value = value, code = value.toString)
-        })
+        }
+        updateCode(newNode)
       case _ =>
     }
   }
