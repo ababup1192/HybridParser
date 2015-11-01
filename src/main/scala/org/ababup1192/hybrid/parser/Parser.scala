@@ -1,4 +1,4 @@
-package org.ababup1192.hybrid
+package org.ababup1192.hybrid.parser
 
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 
@@ -18,8 +18,8 @@ trait Parser {
     lexer.input(newCode)
   }
 
-  def ast: Map[Int, org.ababup1192.hybrid.Node] = {
-    addedNodes.reverse.foldLeft(Map.empty[Int, org.ababup1192.hybrid.Node]) { (ast, id) =>
+  def ast: Map[Int, Node] = {
+    addedNodes.reverse.foldLeft(Map.empty[Int, Node]) { (ast, id) =>
       syntax.getNode(id) match {
         case Some(node) => ast ++ Map(id -> exportNode(node))
         case None => ast
@@ -27,7 +27,7 @@ trait Parser {
     }
   }
 
-  private def exportNode(node: name.lakhin.eliah.projects.papacarlo.syntax.Node): org.ababup1192.hybrid.Node = {
+  private def exportNode(node: name.lakhin.eliah.projects.papacarlo.syntax.Node): Node = {
     val id = node.getId
     val code = node.sourceCode
     val parentId = node.getParent.map(_.getId).getOrElse(-1)

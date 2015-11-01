@@ -1,4 +1,4 @@
-package org.ababup1192.hybrid
+package org.ababup1192.hybrid.parser
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import org.ababup1192.hybrid.util.StringUtil
@@ -59,8 +59,4 @@ trait ParserController {
 case class Fragment(id: Int, from: WordLocation, to: WordLocation)
 
 case class WordLocation(line: Int, ch: Int)
-
-
-
-
 

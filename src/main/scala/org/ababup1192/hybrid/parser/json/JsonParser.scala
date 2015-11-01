@@ -1,6 +1,7 @@
-package org.ababup1192.hybrid
+package org.ababup1192.hybrid.parser.json
 
 import name.lakhin.eliah.projects.papacarlo.examples.Json
+import org.ababup1192.hybrid.parser._
 
 case class JsonParser() extends Parser {
   val lexer = Json.lexer
