@@ -1,6 +1,8 @@
-name := """JsonHybrid"""
+name := """HybridParser"""
 
-version := "1.0"
+organization := "org.ababup1192"
+
+version := "0.1.0"
 
 scalaVersion := "2.11.7"
 

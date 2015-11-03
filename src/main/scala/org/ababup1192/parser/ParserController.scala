@@ -1,6 +1,6 @@
-package org.ababup1192.hybrid.parser
+package org.ababup1192.parser
 
-import org.ababup1192.hybrid.util.StringUtil
+import org.ababup1192.util.StringUtil
 
 trait ParserController {
   val parser: Parser

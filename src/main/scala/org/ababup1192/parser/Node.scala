@@ -1,4 +1,4 @@
-package org.ababup1192.hybrid.parser
+package org.ababup1192.parser
 
 trait Node {
   val id: Int

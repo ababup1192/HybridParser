@@ -1,4 +1,4 @@
-package org.ababup1192.hybrid.parser
+package org.ababup1192.parser
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}

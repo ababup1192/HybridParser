@@ -1,6 +1,6 @@
-package org.ababup1192.hybrid.util
+package org.ababup1192.util
 
-import org.ababup1192.hybrid.parser.WordLocation
+import org.ababup1192.parser.WordLocation
 
 object StringUtil {
 

@@ -1,6 +1,6 @@
-package org.ababup1192.hybrid.parser.json
+package org.ababup1192.parser.json
 
-import org.ababup1192.hybrid.parser._
+import org.ababup1192.parser._
 import org.scalatest._
 
 class JsonParserControllerSpec extends FlatSpec with Matchers {
