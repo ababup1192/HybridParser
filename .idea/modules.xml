@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/hybridparser.iml" filepath="$PROJECT_DIR$/.idea/modules/hybridparser.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jsonhybrid-build.iml" filepath="$PROJECT_DIR$/.idea/modules/jsonhybrid-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hybridparser-build.iml" filepath="$PROJECT_DIR$/.idea/modules/hybridparser-build.iml" />
     </modules>
   </component>
 </project>

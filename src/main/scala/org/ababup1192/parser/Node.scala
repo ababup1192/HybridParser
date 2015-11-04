@@ -1,5 +1,7 @@
 package org.ababup1192.parser
 
+import spray.json._
+
 trait Node {
   val id: Int
   val kind: String
@@ -22,7 +24,10 @@ trait Node {
   }
 }
 
-case class ObjectNode(id: Int, kind: String, code: String, parentId: Int, childrenId: List[Int]) extends Node
+case class ObjectNode(id: Int, kind: String, code: String, parentId: Int, childrenId: List[Int]) extends Node {
+  def toJson: JsValue = JsObject("id" -> JsNumber(id), "kind" -> JsString(kind), "code" -> JsString(code),
+    "parentId" -> JsNumber(parentId), "childrenId" -> JsArray(childrenId.map(JsNumber(_))))
+}
 
 object ObjectNode {
   def newValue(id: Int = -1, kind: String = "object", code: String = "{}", parentId: Int = -1, childrenId: List[Int] = List.empty): ObjectNode = {
@@ -30,7 +35,10 @@ object ObjectNode {
   }
 }
 
-case class EntryNode(id: Int, kind: String, code: String, key: String, parentId: Int, childrenId: List[Int]) extends Node
+case class EntryNode(id: Int, kind: String, code: String, key: String, parentId: Int, childrenId: List[Int]) extends Node {
+  def toJson: JsValue = JsObject("id" -> JsNumber(id), "kind" -> JsString(kind), "code" -> JsString(code),
+    "key" -> JsString(key), "parentId" -> JsNumber(parentId), "childrenId" -> JsArray(childrenId.map(JsNumber(_))))
+}
 
 object EntryNode {
   def newValue(id: Int = -1, kind: String = "entry", key: String, parentId: Int = -1, childrenId: List[Int] = List.empty): EntryNode = {
@@ -38,7 +46,10 @@ object EntryNode {
   }
 }
 
-case class ArrayNode(id: Int, kind: String, code: String, parentId: Int, childrenId: List[Int]) extends Node
+case class ArrayNode(id: Int, kind: String, code: String, parentId: Int, childrenId: List[Int]) extends Node {
+  def toJson: JsValue = JsObject("id" -> JsNumber(id), "kind" -> JsString(kind), "code" -> JsString(code),
+    "parentId" -> JsNumber(parentId), "childrenId" -> JsArray(childrenId.map(JsNumber(_))))
+}
 
 object ArrayNode {
   def newValue(id: Int = -1, kind: String = "array", code: String = "[]", parentId: Int = -1, childrenId: List[Int] = List.empty): ArrayNode = {
@@ -46,7 +57,10 @@ object ArrayNode {
   }
 }
 
-case class StringNode(id: Int, kind: String, code: String, value: String, parentId: Int, childrenId: List[Int]) extends Node
+case class StringNode(id: Int, kind: String, code: String, value: String, parentId: Int, childrenId: List[Int] = List.empty) extends Node {
+  def toJson: JsValue = JsObject("id" -> JsNumber(id), "kind" -> JsString(kind), "code" -> JsString(code),
+    "value" -> JsString(value), "parentId" -> JsNumber(parentId), "childrenId" -> JsArray(childrenId.map(JsNumber(_))))
+}
 
 object StringNode {
   def newValue(id: Int = -1, kind: String = "string", value: String, parentId: Int = -1, childrenId: List[Int] = List.empty): StringNode = {
@@ -54,7 +68,10 @@ object StringNode {
   }
 }
 
-case class NumberNode(id: Int, kind: String, code: String, value: Double, parentId: Int, childrenId: List[Int]) extends Node
+case class NumberNode(id: Int, kind: String, code: String, value: Double, parentId: Int, childrenId: List[Int] = List.empty) extends Node {
+  def toJson: JsValue = JsObject("id" -> JsNumber(id), "kind" -> JsString(kind), "code" -> JsString(code),
+    "value" -> JsNumber(value), "parentId" -> JsNumber(parentId), "childrenId" -> JsArray(childrenId.map(JsNumber(_))))
+}
 
 object NumberNode {
   def newValue(id: Int = -1, kind: String = "number", value: Int, parentId: Int = -1, childrenId: List[Int] = List.empty): NumberNode = {
@@ -66,7 +83,10 @@ object NumberNode {
   }
 }
 
-case class BooleanNode(id: Int, kind: String, code: String, value: Boolean, parentId: Int, childrenId: List[Int]) extends Node
+case class BooleanNode(id: Int, kind: String, code: String, value: Boolean, parentId: Int, childrenId: List[Int] = List.empty) extends Node {
+  def toJson: JsValue = JsObject("id" -> JsNumber(id), "kind" -> JsString(kind), "code" -> JsString(code),
+    "value" -> JsBoolean(value), "parentId" -> JsNumber(parentId), "childrenId" -> JsArray(childrenId.map(JsNumber(_))))
+}
 
 object BooleanNode {
   def newValue(id: Int = -1, kind: String = "boolean", value: Boolean, parentId: Int = -1, childrenId: List[Int] = List.empty): BooleanNode = {
@@ -74,9 +94,8 @@ object BooleanNode {
   }
 }
 
-
-case class NullNode(id: Int, kind: String = "null", code: String = "null", parentId: Int, childrenId: List[Int] = List.empty) extends Node
-
-
-
+case class NullNode(id: Int, kind: String = "null", code: String = "null", parentId: Int, childrenId: List[Int] = List.empty) extends Node {
+  def toJson: JsValue = JsObject("id" -> JsNumber(id), "kind" -> JsString(kind), "code" -> JsString(code),
+    "parentId" -> JsNumber(parentId), "childrenId" -> JsArray(childrenId.map(JsNumber(_))))
+}
 
