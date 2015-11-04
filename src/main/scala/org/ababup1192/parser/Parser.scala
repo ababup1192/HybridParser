@@ -2,7 +2,6 @@ package org.ababup1192.parser
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
-import spray.json._
 
 /**
   * Parser has lexer, syntax, AST and ParserController.
@@ -40,35 +39,6 @@ trait Parser {
         case None => ast
       }
     }
-  }
-
-  object ASTJsonProtocol extends DefaultJsonProtocol {
-
-    implicit object MapNodeJsonFormat extends JsonFormat[Map[Int, Node]] {
-      def write(m: Map[Int, Node]) = {
-        JsObject(m.map {
-          case (key, value: ObjectNode) => (key.toString, value.toJson)
-          case (key, value: EntryNode) => (key.toString, value.toJson)
-          case (key, value: ArrayNode) => (key.toString, value.toJson)
-          case (key, value: StringNode) => (key.toString, value.toJson)
-          case (key, value: NumberNode) => (key.toString, value.toJson)
-          case (key, value: BooleanNode) => (key.toString, value.toJson)
-          case (key, value: NullNode) => (key.toString, value.toJson)
-        })
-      }
-
-      def read(value: JsValue) = ???
-    }
-
-  }
-
-  /**
-    * Create an json AST for convenience.
-    * @return AST ID -> js.Any
-    */
-  def jsonAst: JsValue = {
-    import ASTJsonProtocol._
-    ast.toJson
   }
 
   /**

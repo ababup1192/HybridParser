@@ -33,6 +33,14 @@ object ObjectNode {
   def newValue(id: Int = -1, kind: String = "object", code: String = "{}", parentId: Int = -1, childrenId: List[Int] = List.empty): ObjectNode = {
     ObjectNode(id, kind, code, parentId, childrenId)
   }
+
+  def fromJson(value: JsValue): Option[ObjectNode] = {
+    value.asJsObject.getFields("id", "kind", "code", "parentId", "childrenId") match {
+      case Seq(JsNumber(id), JsString(kind), JsString(code), JsNumber(parentId), JsArray(childrenId)) =>
+        Some(ObjectNode(id.toInt, kind, code, parentId.toInt, childrenId.map(_.toString.toInt).toList))
+      case _ => None
+    }
+  }
 }
 
 case class EntryNode(id: Int, kind: String, code: String, key: String, parentId: Int, childrenId: List[Int]) extends Node {
@@ -43,6 +51,14 @@ case class EntryNode(id: Int, kind: String, code: String, key: String, parentId:
 object EntryNode {
   def newValue(id: Int = -1, kind: String = "entry", key: String, parentId: Int = -1, childrenId: List[Int] = List.empty): EntryNode = {
     EntryNode(id, kind, "\"" + key + "\": null", key, parentId, childrenId)
+  }
+
+  def fromJson(value: JsValue): Option[EntryNode] = {
+    value.asJsObject.getFields("id", "kind", "code", "key", "parentId", "childrenId") match {
+      case Seq(JsNumber(id), JsString(kind), JsString(key), JsString(code), JsNumber(parentId), JsArray(childrenId)) =>
+        Some(EntryNode(id.toInt, kind, code, key, parentId.toInt, childrenId.map(_.toString.toInt).toList))
+      case _ => None
+    }
   }
 }
 
@@ -55,6 +71,14 @@ object ArrayNode {
   def newValue(id: Int = -1, kind: String = "array", code: String = "[]", parentId: Int = -1, childrenId: List[Int] = List.empty): ArrayNode = {
     ArrayNode(id, kind: String, code, parentId, childrenId)
   }
+
+  def fromJson(value: JsValue): Option[ArrayNode] = {
+    value.asJsObject.getFields("id", "kind", "code", "key", "parentId", "childrenId") match {
+      case Seq(JsNumber(id), JsString(kind), JsString(code), JsNumber(parentId), JsArray(childrenId)) =>
+        Some(ArrayNode(id.toInt, kind, code, parentId.toInt, childrenId.map(_.toString.toInt).toList))
+      case _ => None
+    }
+  }
 }
 
 case class StringNode(id: Int, kind: String, code: String, value: String, parentId: Int, childrenId: List[Int] = List.empty) extends Node {
@@ -65,6 +89,14 @@ case class StringNode(id: Int, kind: String, code: String, value: String, parent
 object StringNode {
   def newValue(id: Int = -1, kind: String = "string", value: String, parentId: Int = -1, childrenId: List[Int] = List.empty): StringNode = {
     StringNode(id, kind, "\"" + value + "\"", "\"" + value + "\"", parentId, childrenId)
+  }
+
+  def fromJson(value: JsValue): Option[StringNode] = {
+    value.asJsObject.getFields("id", "kind", "value", "code", "key", "parentId", "childrenId") match {
+      case Seq(JsNumber(id), JsString(kind), JsString(value), JsString(code), JsNumber(parentId), JsArray(childrenId)) =>
+        Some(StringNode(id.toInt, kind, code, value, parentId.toInt, childrenId.map(_.toString.toInt).toList))
+      case _ => None
+    }
   }
 }
 
@@ -81,6 +113,14 @@ object NumberNode {
       NumberNode(id, kind, value.toString, value, parentId, childrenId)
     }
   }
+
+  def fromJson(value: JsValue): Option[NumberNode] = {
+    value.asJsObject.getFields("id", "kind", "value", "code", "key", "parentId", "childrenId") match {
+      case Seq(JsNumber(id), JsString(kind), JsNumber(value), JsString(code), JsNumber(parentId), JsArray(childrenId)) =>
+        Some(NumberNode(id.toInt, kind, code, value.toDouble, parentId.toInt, childrenId.map(_.toString.toInt).toList))
+      case _ => None
+    }
+  }
 }
 
 case class BooleanNode(id: Int, kind: String, code: String, value: Boolean, parentId: Int, childrenId: List[Int] = List.empty) extends Node {
@@ -92,6 +132,14 @@ object BooleanNode {
   def newValue(id: Int = -1, kind: String = "boolean", value: Boolean, parentId: Int = -1, childrenId: List[Int] = List.empty): BooleanNode = {
     BooleanNode(id, kind, value.toString, value, parentId, childrenId)
   }
+
+  def fromJson(value: JsValue): Option[BooleanNode] = {
+    value.asJsObject.getFields("id", "kind", "value", "code", "key", "parentId", "childrenId") match {
+      case Seq(JsNumber(id), JsString(kind), JsBoolean(value), JsString(code), JsNumber(parentId), JsArray(childrenId)) =>
+        Some(BooleanNode(id.toInt, kind, code, value, parentId.toInt, childrenId.map(_.toString.toInt).toList))
+      case _ => None
+    }
+  }
 }
 
 case class NullNode(id: Int, kind: String = "null", code: String = "null", parentId: Int, childrenId: List[Int] = List.empty) extends Node {
@@ -99,3 +147,12 @@ case class NullNode(id: Int, kind: String = "null", code: String = "null", paren
     "parentId" -> JsNumber(parentId), "childrenId" -> JsArray(childrenId.map(JsNumber(_))))
 }
 
+object NullNode {
+  def fromJson(value: JsValue): Option[NullNode] = {
+    value.asJsObject.getFields("id", "kind", "code", "key", "parentId", "childrenId") match {
+      case Seq(JsNumber(id), JsString(kind), JsString(code), JsNumber(parentId), JsArray(childrenId)) =>
+        Some(NullNode(id.toInt, kind, code, parentId.toInt, childrenId.map(_.toString.toInt).toList))
+      case _ => None
+    }
+  }
+}
