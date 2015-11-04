@@ -4,9 +4,9 @@ import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 
 /**
- * Parser has lexer, syntax, AST and ParserController.
- * ParserController can edit Source Code by using AST.
- */
+  * Parser has lexer, syntax, AST and ParserController.
+  * ParserController can edit Source Code by using AST.
+  */
 trait Parser {
   val lexer: Lexer
   val syntax: Syntax
@@ -20,18 +20,18 @@ trait Parser {
   }
 
   /**
-   * Update Source Code and AST
-   * @param newCode new Source Code.
-   */
+    * Update Source Code and AST
+    * @param newCode new Source Code.
+    */
   def input(newCode: String): Unit = {
     lexer.input(newCode)
     addedNodes = addedNodes diff (addedNodes diff ast.keys.toList)
   }
 
   /**
-   * Create an another AST for convenience.
-   * @return AST ID -> Node
-   */
+    * Create an another AST for convenience.
+    * @return AST ID -> Node
+    */
   def ast: Map[Int, Node] = {
     addedNodes.reverse.foldLeft(Map.empty[Int, Node]) { (ast, id) =>
       syntax.getNode(id) match {
@@ -42,10 +42,10 @@ trait Parser {
   }
 
   /**
-   * Transform Parser Combinator AST Node -> Another AST Node
-   * @param node Syntax AST Node
-   * @return Another AST Node
-   */
+    * Transform Parser Combinator AST Node -> Another AST Node
+    * @param node Syntax AST Node
+    * @return Another AST Node
+    */
   private def exportNode(node: name.lakhin.eliah.projects.papacarlo.syntax.Node): Node = {
     val id = node.getId
     val code = node.sourceCode
@@ -53,24 +53,24 @@ trait Parser {
     val childrenId = node.getBranches.flatMap(_._2).map(_.getId).toList
 
     node.getKind match {
-      case "object" => ObjectNode(id, code, parentId, childrenId)
-      case "entry" =>
+      case kind@"object" => ObjectNode(id, kind, code, parentId, childrenId)
+      case kind@"entry" =>
         val key = node.getValues.flatMap(_._2).headOption.getOrElse("")
         // Delete left and right double quote
-        EntryNode(id, code, key.drop(1).dropRight(1), parentId, childrenId)
-      case "array" => ArrayNode(id, code, parentId, childrenId)
-      case "string" => StringNode(id, code, value = code, parentId, childrenId)
-      case "number" => NumberNode(id, code, code.toDouble, parentId, childrenId)
-      case "boolean" => BooleanNode(id, code, code.toBoolean, parentId, childrenId)
-      case _ => NullNode(id, code, parentId, childrenId)
+        EntryNode(id, kind, code, key.drop(1).dropRight(1), parentId, childrenId)
+      case kind@"array" => ArrayNode(id, kind, code, parentId, childrenId)
+      case kind@"string" => StringNode(id, kind, code, value = code, parentId, childrenId)
+      case kind@"number" => NumberNode(id, kind, code, code.toDouble, parentId, childrenId)
+      case kind@"boolean" => BooleanNode(id, kind, code, code.toBoolean, parentId, childrenId)
+      case _ => NullNode(id, "null", code, parentId, childrenId)
     }
   }
 
   /**
-   * Get token index of begin to end.
-   * @param id Node ID
-   * @return Fragment
-   */
+    * Get token index of begin to end.
+    * @param id Node ID
+    * @return Fragment
+    */
   def getNodeFragment(id: Int): Option[Fragment] = {
     syntax.getNode(id) match {
       case Some(node) =>

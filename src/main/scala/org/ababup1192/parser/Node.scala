@@ -2,6 +2,7 @@ package org.ababup1192.parser
 
 trait Node {
   val id: Int
+  val kind: String
   val code: String
   val parentId: Int
   val childrenId: List[Int]
@@ -21,60 +22,60 @@ trait Node {
   }
 }
 
-case class ObjectNode(id: Int, code: String, parentId: Int, childrenId: List[Int]) extends Node
+case class ObjectNode(id: Int, kind: String, code: String, parentId: Int, childrenId: List[Int]) extends Node
 
 object ObjectNode {
-  def newValue(id: Int = -1, code: String = "{}", parentId: Int = -1, childrenId: List[Int] = List.empty): ObjectNode = {
-    ObjectNode(id, code, parentId, childrenId)
+  def newValue(id: Int = -1, kind: String = "object", code: String = "{}", parentId: Int = -1, childrenId: List[Int] = List.empty): ObjectNode = {
+    ObjectNode(id, kind, code, parentId, childrenId)
   }
 }
 
-case class EntryNode(id: Int, code: String, key: String, parentId: Int, childrenId: List[Int]) extends Node
+case class EntryNode(id: Int, kind: String, code: String, key: String, parentId: Int, childrenId: List[Int]) extends Node
 
 object EntryNode {
-  def newValue(id: Int = -1, key: String, parentId: Int = -1, childrenId: List[Int] = List.empty): EntryNode = {
-    EntryNode(id, "\"" + key + "\": null", key, parentId, childrenId)
+  def newValue(id: Int = -1, kind: String = "entry", key: String, parentId: Int = -1, childrenId: List[Int] = List.empty): EntryNode = {
+    EntryNode(id, kind, "\"" + key + "\": null", key, parentId, childrenId)
   }
 }
 
-case class ArrayNode(id: Int, code: String, parentId: Int, childrenId: List[Int]) extends Node
+case class ArrayNode(id: Int, kind: String, code: String, parentId: Int, childrenId: List[Int]) extends Node
 
 object ArrayNode {
-  def newValue(id: Int = -1, code: String = "[]", parentId: Int = -1, childrenId: List[Int] = List.empty): ArrayNode = {
-    ArrayNode(id, code, parentId, childrenId)
+  def newValue(id: Int = -1, kind: String = "array", code: String = "[]", parentId: Int = -1, childrenId: List[Int] = List.empty): ArrayNode = {
+    ArrayNode(id, kind: String, code, parentId, childrenId)
   }
 }
 
-case class StringNode(id: Int, code: String, value: String, parentId: Int, childrenId: List[Int]) extends Node
+case class StringNode(id: Int, kind: String, code: String, value: String, parentId: Int, childrenId: List[Int]) extends Node
 
 object StringNode {
-  def newValue(id: Int = -1, value: String, parentId: Int = -1, childrenId: List[Int] = List.empty): StringNode = {
-    StringNode(id, "\"" + value + "\"", "\"" + value + "\"", parentId, childrenId)
+  def newValue(id: Int = -1, kind: String = "string", value: String, parentId: Int = -1, childrenId: List[Int] = List.empty): StringNode = {
+    StringNode(id, kind, "\"" + value + "\"", "\"" + value + "\"", parentId, childrenId)
   }
 }
 
-case class NumberNode(id: Int, code: String, value: Double, parentId: Int, childrenId: List[Int]) extends Node
+case class NumberNode(id: Int, kind: String, code: String, value: Double, parentId: Int, childrenId: List[Int]) extends Node
 
 object NumberNode {
-  def newValue(id: Int = -1, value: Int, parentId: Int = -1, childrenId: List[Int] = List.empty): NumberNode = {
+  def newValue(id: Int = -1, kind: String = "number", value: Int, parentId: Int = -1, childrenId: List[Int] = List.empty): NumberNode = {
     if (value.isValidInt) {
-      NumberNode(id, value.toInt.toString, value, parentId, childrenId)
+      NumberNode(id, kind, value.toInt.toString, value, parentId, childrenId)
     } else {
-      NumberNode(id, value.toString, value, parentId, childrenId)
+      NumberNode(id, kind, value.toString, value, parentId, childrenId)
     }
   }
 }
 
-case class BooleanNode(id: Int, code: String, value: Boolean, parentId: Int, childrenId: List[Int]) extends Node
+case class BooleanNode(id: Int, kind: String, code: String, value: Boolean, parentId: Int, childrenId: List[Int]) extends Node
 
 object BooleanNode {
-  def newValue(id: Int = -1, value: Boolean, parentId: Int = -1, childrenId: List[Int] = List.empty): BooleanNode = {
-    BooleanNode(id, value.toString, value, parentId, childrenId)
+  def newValue(id: Int = -1, kind: String = "boolean", value: Boolean, parentId: Int = -1, childrenId: List[Int] = List.empty): BooleanNode = {
+    BooleanNode(id, kind, value.toString, value, parentId, childrenId)
   }
 }
 
 
-case class NullNode(id: Int, code: String = "null", parentId: Int, childrenId: List[Int] = List.empty) extends Node
+case class NullNode(id: Int, kind: String = "null", code: String = "null", parentId: Int, childrenId: List[Int] = List.empty) extends Node
 
 
 

@@ -428,20 +428,4 @@ class JsonParserControllerSpec extends FlatSpec with Matchers {
     ast.size should ===(5)
     parser.code should ===("""{"foo": 1, "fizz": 3}""")
   }
-
-   "JsonParserController" should "delete array elements" in {
-    val parser = JsonParser()
-    val json =
-      """{
-        |  "foo": [1, 2, 3, 4]
-        |}""".stripMargin
-    parser.input(json)
-    parser.controller.delete(5)
-    parser.controller.delete(7)
-    parser.syntax.getErrors should ===(List.empty)
-
-    val ast = parser.ast
-    ast.size should ===(5)
-    parser.code should ===(json.replace("[1, 2, 3, 4]", "[1, 3]"))
-  }
 }

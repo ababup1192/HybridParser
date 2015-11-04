@@ -48,9 +48,9 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   /**
-   * Insert a node to null node.
-   * @param newNode A new node.
-   */
+    * Insert a node to null node.
+    * @param newNode A new node.
+    */
   override def insertNode(newNode: Node): Unit = {
     parser.ast.get(newNode.id).foreach {
       case _: NullNode =>
@@ -59,10 +59,10 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   /**
-   * Add new entry
-   * @param objectId object node ID
-   * @param key new entry key
-   */
+    * Add new entry
+    * @param objectId object node ID
+    * @param key new entry key
+    */
   override def addEntry(objectId: Int, key: String): Unit = {
     val ast = parser.ast
     ast.get(objectId).foreach {
@@ -77,9 +77,9 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   /**
-   * Add new element of Array
-   * @param newNode an any node must have parent ID that is array node
-   */
+    * Add new element of Array
+    * @param newNode an any node must have parent ID that is array node
+    */
   override def addArrayElement(newNode: Node): Unit = {
     val ast = parser.ast
     parser.ast.get(newNode.parentId).foreach {
@@ -93,10 +93,10 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   }
 
   /**
-   * Swap array element
-   * @param from array element node id
-   * @param to array element node id
-   */
+    * Swap array element
+    * @param from array element node id
+    * @param to array element node id
+    */
   override def swapArray(from: Int, to: Int): Unit = {
     val ast = parser.ast
     for {
@@ -130,7 +130,7 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
       (deleteParentNode, deleteNode) match {
         // "SomeEntry": DeleteNode -> "SomeEntry": null
         case (_: EntryNode, _) =>
-          val nullNode = NullNode(deleteNode.id, "null", deleteNode.parentId)
+          val nullNode = NullNode(deleteNode.id, "null", "null", deleteNode.parentId)
           updateCode(nullNode)
         // [a, b, c, deleteNode] -> [a, b, c]
         case (arrayNode: ArrayNode, _) =>
@@ -149,14 +149,14 @@ case class JsonParserController(parser: JsonParser) extends ParserController {
   private def deleteArrayElement(ast: Map[Int, Node], deleteNode: Node, arrayNode: ArrayNode): Unit = {
     val siblingsNodes = deleteNode.siblings(ast)
     val newCode = "[" + siblingsNodes.map(_.code).mkString(", ") + "]"
-    val newNode = ArrayNode(arrayNode.id, newCode, arrayNode.parentId, siblingsNodes.map(_.id).toList)
+    val newNode = ArrayNode(arrayNode.id, "array", newCode, arrayNode.parentId, siblingsNodes.map(_.id).toList)
     updateCode(newNode)
   }
 
   private def deleteEntry(ast: Map[Int, Node], deleteEntry: Node, objectNode: ObjectNode): Unit = {
     val siblingsNodes = deleteEntry.siblings(ast)
     val newCode = "{" + siblingsNodes.map(_.code).mkString(", ") + "}"
-    val newNode = ArrayNode(objectNode.id, newCode, objectNode.parentId, siblingsNodes.map(_.id).toList)
+    val newNode = ArrayNode(objectNode.id, "array", newCode, objectNode.parentId, siblingsNodes.map(_.id).toList)
     updateCode(newNode)
   }
 
