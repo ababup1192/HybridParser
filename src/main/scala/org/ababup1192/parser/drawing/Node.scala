@@ -6,38 +6,28 @@ trait Node {
   val id: Int
   val kind: String
   val code: String
-  val parent: Option[Node]
+  val parentId: Int
   val children: Seq[Node]
-  val fragment: Fragment
-
-  def siblings(node: Node): Seq[Node] = {
-    siblingsWithSelf(node).filterNot(_ == node.id)
-  }
-
-  def siblingsWithSelf(node: Node): Seq[Node] = {
-    node.parent.map { parent =>
-      parent.children
-    }.getOrElse(Seq.empty[Node])
-  }
+  val fragment: Option[Fragment]
 }
 
-case class ObjectNode(id: Int, kind: String, code: String,
-                      parent: Option[Node] = None, children: Seq[Node], fragment: Fragment) extends Node
+case class ObjectNode(id: Int, kind: String, code: String, parentId: Int = -1,
+                      children: Seq[Node], fragment: Option[Fragment]) extends Node
 
-case class EntryNode(id: Int, kind: String, code: String, key: String,
-                     parent: Option[Node] = None, children: Seq[Node], fragment: Fragment) extends Node
+case class EntryNode(id: Int, kind: String, code: String, key: String, parentId: Int = -1,
+                     children: Seq[Node], fragment: Option[Fragment]) extends Node
 
-case class ArrayNode(id: Int, kind: String, code: String,
-                     parent: Option[Node] = None, children: Seq[Node], fragment: Fragment) extends Node
+case class ArrayNode(id: Int, kind: String, code: String, parentId: Int = -1,
+                     children: Seq[Node], fragment: Option[Fragment]) extends Node
 
-case class StringNode(id: Int, kind: String, code: String, value: String,
-                      parent: Option[Node] = None, children: Seq[Node] = Seq.empty, fragment: Fragment) extends Node
+case class StringNode(id: Int, kind: String, code: String, value: String, parentId: Int = -1,
+                      children: Seq[Node] = Seq.empty, fragment: Option[Fragment]) extends Node
 
-case class NumberNode(id: Int, kind: String, code: String, value: Double,
-                      parent: Option[Node] = None, children: Seq[Node] = Seq.empty, fragment: Fragment) extends Node
+case class NumberNode(id: Int, kind: String, code: String, value: Double, parentId: Int = -1,
+                      children: Seq[Node] = Seq.empty, fragment: Option[Fragment]) extends Node
 
-case class BooleanNode(id: Int, kind: String, code: String, value: Boolean,
-                       parent: Option[Node] = None, children: Seq[Node] = Seq.empty, fragment: Fragment) extends Node
+case class BooleanNode(id: Int, kind: String, code: String, value: Boolean, parentId: Int = -1,
+                       children: Seq[Node] = Seq.empty, fragment: Option[Fragment]) extends Node
 
-case class NullNode(id: Int, kind: String = "null", code: String = "null",
-                    parent: Option[Node] = None, children: Seq[Node] = Seq.empty, fragment: Fragment) extends Node
+case class NullNode(id: Int, kind: String = "null", code: String = "null", parentId: Int = -1,
+                    children: Seq[Node] = Seq.empty, fragment: Option[Fragment]) extends Node
