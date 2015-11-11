@@ -7,6 +7,7 @@ object ParserTest {
     val parser = JsonParser()
     parser.input( """{"hoge": ["str", 2, true, false, {"foo": true, "bar": false}], "uge": 123}""")
 
-    parser.drawingAst.foreach(println)
+    parser.drawingAst.foreach(ast => println(ast.toJson))
+
   }
 }

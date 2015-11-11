@@ -24,11 +24,13 @@ trait DrawingParser extends org.ababup1192.parser.Parser {
     node.getKind match {
       case kind@"object" => ObjectNode(id, kind, code, parentId, children, fragment)
       case kind@"entry" =>
-        val key = node.getValues.flatMap(_._2).headOption.map(_.drop(1).dropRight(1)).getOrElse("")
         // Delete left and right double quote
+        val key = node.getValues.flatMap(_._2).headOption.map(_.drop(1).dropRight(1)).getOrElse("")
         EntryNode(id, kind, code, key, parentId, children, fragment)
       case kind@"array" => ArrayNode(id, kind, code, parentId, children, fragment)
-      case kind@"string" => StringNode(id, kind, code, value = code, parentId, children, fragment)
+      case kind@"string" =>
+        val value = code.drop(1).dropRight(1)
+        StringNode(id, kind, code, value, parentId, children, fragment)
       case kind@"number" => NumberNode(id, kind, code, code.toDouble, parentId, children, fragment)
       case kind@"boolean" => BooleanNode(id, kind, code, code.toBoolean, parentId, children, fragment)
       case _ => NullNode(id, "null", code, parentId, children, fragment)
