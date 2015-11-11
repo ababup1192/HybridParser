@@ -1,8 +1,10 @@
+enablePlugins(ScalaJSPlugin)
+
 name := """HybridParser"""
 
 organization := "org.ababup1192"
 
-version := "0.3.3"
+version := "0.3.4"
 
 scalaVersion := "2.11.7"
 
