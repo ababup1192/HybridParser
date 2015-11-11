@@ -2,7 +2,7 @@ package org.ababup1192.parser
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
-import spray.json._
+import upickle.Js._
 
 /**
   * Parser has lexer, syntax, AST and ParserController.
@@ -88,22 +88,17 @@ trait Parser {
 }
 
 
-case class WordLocation(line: Int, ch: Int)
-
-object WordLocationProtocol extends DefaultJsonProtocol {
-  implicit val wordLocationFormat = jsonFormat2(WordLocation)
-}
-
-case class Fragment(id: Int, from: WordLocation, to: WordLocation)
-
-object FragmentProtocol extends DefaultJsonProtocol {
-
-  implicit object FragmentJsonFormat extends RootJsonWriter[Fragment] {
-    override def write(fragment: Fragment): JsValue = {
-      import WordLocationProtocol._
-      JsObject("id" -> JsNumber(fragment.id), "from" -> fragment.from.toJson, "to" -> fragment.to.toJson)
-    }
+case class WordLocation(line: Int, ch: Int) {
+  def toJson: Value = {
+    Obj(("line", Num(line)), ("ch", Num(ch)))
   }
-
 }
+
+
+case class Fragment(id: Int, from: WordLocation, to: WordLocation) {
+  def toJson: Value = {
+    Obj(("id", Num(id)), ("from", from.toJson), ("to", to.toJson))
+  }
+}
+
 
