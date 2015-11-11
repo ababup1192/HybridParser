@@ -4,7 +4,7 @@ name := """HybridParser"""
 
 organization := "org.ababup1192"
 
-version := "0.3.4"
+version := "0.3.5"
 
 scalaVersion := "2.11.7"
 
