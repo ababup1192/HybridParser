@@ -94,7 +94,6 @@ case class WordLocation(line: Int, ch: Int) {
   }
 }
 
-
 case class Fragment(id: Int, from: WordLocation, to: WordLocation) {
   def toJson: Value = {
     Obj(("id", Num(id)), ("from", from.toJson), ("to", to.toJson))
