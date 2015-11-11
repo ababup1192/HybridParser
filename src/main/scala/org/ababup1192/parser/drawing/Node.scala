@@ -98,8 +98,11 @@ object JsonVisitor {
         }
       case "boolean" =>
         (node("id"), node("kind"), node("code"), node("value"), node("parentId"), node("children"), node("fragment")) match {
-          case (Num(id), Str(kind), Str(code), Num(parentId), value, children: Arr, fragment: Obj) =>
-            Some(BooleanNode(id.toInt, kind, code, if (value == True) true else false,
+          case (Num(id), Str(kind), Str(code), True, Num(parentId), children: Arr, fragment: Obj) =>
+            Some(BooleanNode(id.toInt, kind, code, value = true,
+              parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
+          case (Num(id), Str(kind), Str(code), False, Num(parentId), children: Arr, fragment: Obj) =>
+            Some(BooleanNode(id.toInt, kind, code, value = false,
               parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
