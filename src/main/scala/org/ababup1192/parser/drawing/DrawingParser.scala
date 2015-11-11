@@ -26,6 +26,7 @@ trait DrawingParser extends org.ababup1192.parser.Parser {
       case kind@"entry" =>
         // Delete left and right double quote
         val key = node.getValues.flatMap(_._2).headOption.getOrElse("").drop(1).dropRight(1)
+        println(key)
         EntryNode(id, kind, code, key, parentId, children, fragment)
       case kind@"array" => ArrayNode(id, kind, code, parentId, children, fragment)
       case kind@"string" =>

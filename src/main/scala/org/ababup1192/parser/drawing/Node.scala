@@ -75,7 +75,7 @@ object JsonVisitor {
       case "entry" =>
         (node("id"), node("kind"), node("code"), node("key"), node("parentId"), node("children"), node("fragment")) match {
           case (Num(id), Str(kind), Str(code), Str(key), Num(parentId), children: Arr, fragment: Obj) =>
-            Some(EntryNode(id.toInt, kind, key, code, parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
+            Some(EntryNode(id.toInt, kind, code, key, parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
       case "array" =>
