@@ -94,10 +94,29 @@ case class WordLocation(line: Int, ch: Int) {
   }
 }
 
+object WordLocation {
+  def fromJson(node: Value): Option[WordLocation] = {
+    (node("line"), node("ch")) match {
+      case (Num(line), Num(ch)) =>
+        Some(WordLocation(line.toInt, ch.toInt))
+      case _ => None
+    }
+  }
+}
+
 case class Fragment(id: Int, from: WordLocation, to: WordLocation) {
   def toJson: Value = {
     Obj(("id", Num(id)), ("from", from.toJson), ("to", to.toJson))
   }
 }
 
+object Fragment {
+  def fromJson(node: Value): Option[Fragment] = {
+    (node("id"), WordLocation.fromJson(node("from")), WordLocation.fromJson(node("to"))) match {
+      case (Num(id), Some(from), Some(to)) =>
+        Some(Fragment(id.toInt, from, to))
+      case _ => None
+    }
+  }
+}
 

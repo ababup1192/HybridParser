@@ -1,7 +1,6 @@
 package org.ababup1192.parser.drawing
 
 import org.ababup1192.parser.Fragment
-import org.ababup1192.util.JsonUtil.JsonBoolHelper._
 import upickle.Js._
 
 trait Node {
@@ -53,7 +52,7 @@ case class NumberNode(id: Int, kind: String, code: String, value: Double, parent
 case class BooleanNode(id: Int, kind: String, code: String, value: Boolean, parentId: Int = -1,
                        children: Seq[Node] = Seq.empty, fragment: Option[Fragment]) extends Node {
   def toJson: Value = Obj("id" -> Num(id), "kind" -> Str(kind),
-    "code" -> Str(code), "value" -> value.toBool, "parentId" -> Num(parentId),
+    "code" -> Str(code), "value" -> (if (value) True else False), "parentId" -> Num(parentId),
     "children" -> Arr(children.map(_.toJson): _*), "fragment" -> fragment.map(_.toJson).getOrElse(Null))
 }
 
@@ -70,51 +69,44 @@ object JsonVisitor {
       case "object" =>
         (node("id"), node("kind"), node("code"), node("parentId"), node("children"), node("fragment")) match {
           case (Num(id), Str(kind), Str(code), Num(parentId), children: Arr, fragment: Obj) =>
-            val frg = upickle.default.readJs[Fragment](fragment)
-            Some(ObjectNode(id.toInt, kind, code, parentId.toInt, children.value.flatMap(parse), Some(frg)))
+            Some(ObjectNode(id.toInt, kind, code, parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
       case "entry" =>
         (node("id"), node("kind"), node("code"), node("key"), node("parentId"), node("children"), node("fragment")) match {
           case (Num(id), Str(kind), Str(code), Str(key), Num(parentId), children: Arr, fragment: Obj) =>
-            val frg = upickle.default.readJs[Fragment](fragment)
-            Some(EntryNode(id.toInt, kind, key, code, parentId.toInt, children.value.flatMap(parse), Some(frg)))
+            Some(EntryNode(id.toInt, kind, key, code, parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
       case "array" =>
         (node("id"), node("kind"), node("code"), node("parentId"), node("children"), node("fragment")) match {
           case (Num(id), Str(kind), Str(code), Num(parentId), children: Arr, fragment: Obj) =>
-            val frg = upickle.default.readJs[Fragment](fragment)
-            Some(ArrayNode(id.toInt, kind, code, parentId.toInt, children.value.flatMap(parse), Some(frg)))
+            Some(ArrayNode(id.toInt, kind, code, parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
       case "string" =>
         (node("id"), node("kind"), node("code"), node("value"), node("parentId"), node("children"), node("fragment")) match {
           case (Num(id), Str(kind), Str(code), Str(value), Num(parentId), children: Arr, fragment: Obj) =>
-            val frg = upickle.default.readJs[Fragment](fragment)
-            Some(StringNode(id.toInt, kind, code, value, parentId.toInt, children.value.flatMap(parse), Some(frg)))
+            Some(StringNode(id.toInt, kind, code, value, parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
       case "number" =>
         (node("id"), node("kind"), node("code"), node("value"), node("parentId"), node("children"), node("fragment")) match {
           case (Num(id), Str(kind), Str(code), Num(value), Num(parentId), children: Arr, fragment: Obj) =>
-            val frg = upickle.default.readJs[Fragment](fragment)
-            Some(NumberNode(id.toInt, kind, code, value, parentId.toInt, children.value.flatMap(parse), Some(frg)))
+            Some(NumberNode(id.toInt, kind, code, value, parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
       case "boolean" =>
         (node("id"), node("kind"), node("code"), node("value"), node("parentId"), node("children"), node("fragment")) match {
           case (Num(id), Str(kind), Str(code), Num(parentId), value, children: Arr, fragment: Obj) =>
-            val frg = upickle.default.readJs[Fragment](fragment)
             Some(BooleanNode(id.toInt, kind, code, if (value == True) true else false,
-              parentId.toInt, children.value.flatMap(parse), Some(frg)))
+              parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
       case "null" =>
         (node("id"), node("kind"), node("code"), node("parentId"), node("children"), node("fragment")) match {
           case (Num(id), Str(kind), Str(code), Num(parentId), children: Arr, fragment: Obj) =>
-            val frg = upickle.default.readJs[Fragment](fragment)
-            Some(NullNode(id.toInt, kind, code, parentId.toInt, children.value.flatMap(parse), Some(frg)))
+            Some(NullNode(id.toInt, kind, code, parentId.toInt, children.value.flatMap(parse), Fragment.fromJson(fragment)))
           case _ => None
         }
       case _ => None
